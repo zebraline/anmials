@@ -1,7 +1,6 @@
 *.log
 *.pyc
 *.json
-development.ini
 *.tar
 zyt/*
 local.ini
