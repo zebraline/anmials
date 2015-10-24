@@ -1,0 +1,10 @@
+*.log
+*.pyc
+*.json
+development.ini
+*.tar
+zyt/*
+local.ini
+*.txt
+migration/*
+animals.egg-info/
