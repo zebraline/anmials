@@ -57,6 +57,10 @@ def init_model(engine):
     # mapper(Reflected, t_reflected)
 
 # Import your model modules here.
-from animals.model.auth import User, Group, Permission
+from animals.model.auth import User
+from animals.model.farm_animals import FarmAnimals
+from animals.model.farm import Farm
+from animals.model.user_animals import UserAnimals
 
-__all__ = ('User', 'Group', 'Permission')
+
+

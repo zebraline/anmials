@@ -22,6 +22,6 @@ class BaseController(TGController):
         # TGController.__call__ dispatches to the Controller method
         # the request is routed to.
 
-        tmpl_context.identity = request.identity
+        # tmpl_context.identity = request.identity
 
         return TGController.__call__(self, environ, context)

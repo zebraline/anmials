@@ -40,73 +40,73 @@ base_config.default_renderer = 'genshi'
 base_config.use_sqlalchemy = True
 base_config.model = animals.model
 base_config.DBSession = animals.model.DBSession
-# Configure the authentication backend
-base_config.auth_backend = 'sqlalchemy'
-# YOU MUST CHANGE THIS VALUE IN PRODUCTION TO SECURE YOUR APP
-base_config.sa_auth.cookie_secret = "2b709689-6aa5-48da-9268-0c5139770924"
-# what is the class you want to use to search for users in the database
-base_config.sa_auth.user_class = model.User
+# # Configure the authentication backend
+# base_config.auth_backend = 'sqlalchemy'
+# # YOU MUST CHANGE THIS VALUE IN PRODUCTION TO SECURE YOUR APP
+# base_config.sa_auth.cookie_secret = "2b709689-6aa5-48da-9268-0c5139770924"
+# # what is the class you want to use to search for users in the database
+# base_config.sa_auth.user_class = model.User
 
-from tg.configuration.auth import TGAuthMetadata
+# from tg.configuration.auth import TGAuthMetadata
 
 
-# This tells to TurboGears how to retrieve the data for your user
-class ApplicationAuthMetadata(TGAuthMetadata):
-    def __init__(self, sa_auth):
-        self.sa_auth = sa_auth
+# # This tells to TurboGears how to retrieve the data for your user
+# class ApplicationAuthMetadata(TGAuthMetadata):
+#     def __init__(self, sa_auth):
+#         self.sa_auth = sa_auth
 
-    def authenticate(self, environ, identity):
-        login = identity['login']
-        user = self.sa_auth.dbsession.query(self.sa_auth.user_class).filter_by(
-            user_name=login
-        ).first()
+#     def authenticate(self, environ, identity):
+#         login = identity['login']
+#         user = self.sa_auth.dbsession.query(self.sa_auth.user_class).filter_by(
+#             user_name=login
+#         ).first()
 
-        if not user:
-            login = None
-        elif not user.validate_password(identity['password']):
-            login = None
+#         if not user:
+#             login = None
+#         elif not user.validate_password(identity['password']):
+#             login = None
 
-        if login is None:
-            try:
-                from urllib.parse import parse_qs, urlencode
-            except ImportError:
-                from urlparse import parse_qs
-                from urllib import urlencode
-            from tg.exceptions import HTTPFound
+#         if login is None:
+#             try:
+#                 from urllib.parse import parse_qs, urlencode
+#             except ImportError:
+#                 from urlparse import parse_qs
+#                 from urllib import urlencode
+#             from tg.exceptions import HTTPFound
 
-            params = parse_qs(environ['QUERY_STRING'])
-            params.pop('password', None)  # Remove password in case it was there
-            if user is None:
-                params['failure'] = 'user-not-found'
-            else:
-                params['login'] = identity['login']
-                params['failure'] = 'invalid-password'
+#             params = parse_qs(environ['QUERY_STRING'])
+#             params.pop('password', None)  # Remove password in case it was there
+#             if user is None:
+#                 params['failure'] = 'user-not-found'
+#             else:
+#                 params['login'] = identity['login']
+#                 params['failure'] = 'invalid-password'
 
-            # When authentication fails send user to login page.
-            environ['repoze.who.application'] = HTTPFound(
-                location='?'.join(('/login', urlencode(params, True)))
-            )
+#             # When authentication fails send user to login page.
+#             environ['repoze.who.application'] = HTTPFound(
+#                 location='?'.join(('/login', urlencode(params, True)))
+#             )
 
-        return login
+#         return login
 
-    def get_user(self, identity, userid):
-        return self.sa_auth.dbsession.query(self.sa_auth.user_class).filter_by(
-            user_name=userid
-        ).first()
+#     def get_user(self, identity, userid):
+#         return self.sa_auth.dbsession.query(self.sa_auth.user_class).filter_by(
+#             user_name=userid
+#         ).first()
 
-    def get_groups(self, identity, userid):
-        return [g.group_name for g in identity['user'].groups]
+#     def get_groups(self, identity, userid):
+#         return [g.group_name for g in identity['user'].groups]
 
-    def get_permissions(self, identity, userid):
-        return [p.permission_name for p in identity['user'].permissions]
+#     def get_permissions(self, identity, userid):
+#         return [p.permission_name for p in identity['user'].permissions]
 
-base_config.sa_auth.dbsession = model.DBSession
+# base_config.sa_auth.dbsession = model.DBSession
 
-base_config.sa_auth.authmetadata = ApplicationAuthMetadata(base_config.sa_auth)
+# base_config.sa_auth.authmetadata = ApplicationAuthMetadata(base_config.sa_auth)
 
-# In case ApplicationAuthMetadata didn't find the user discard the whole identity.
-# This might happen if logged-in users are deleted.
-base_config['identity.allow_missing_user'] = False
+# # In case ApplicationAuthMetadata didn't find the user discard the whole identity.
+# # This might happen if logged-in users are deleted.
+# base_config['identity.allow_missing_user'] = False
 
 # You can use a different repoze.who Authenticator if you want to
 # change the way users can login
@@ -120,15 +120,15 @@ base_config['identity.allow_missing_user'] = False
 
 # override this if you would like to provide a different who plugin for
 # managing login and logout of your application
-base_config.sa_auth.form_plugin = None
+# base_config.sa_auth.form_plugin = None
 
-# You may optionally define a page where you want users to be redirected to
-# on login:
-base_config.sa_auth.post_login_url = '/post_login'
+# # You may optionally define a page where you want users to be redirected to
+# # on login:
+# base_config.sa_auth.post_login_url = '/post_login'
 
-# You may optionally define a page where you want users to be redirected to
-# on logout:
-base_config.sa_auth.post_logout_url = '/post_logout'
+# # You may optionally define a page where you want users to be redirected to
+# # on logout:
+# base_config.sa_auth.post_logout_url = '/post_logout'
 try:
     # Enable DebugBar if available, install tgext.debugbar to turn it on
     from tgext.debugbar import enable_debugbar
